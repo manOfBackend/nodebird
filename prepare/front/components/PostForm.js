@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import Form from "antd/lib/form/Form";
 import { Button, Input } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,6 +7,8 @@ import { addPost } from '../reducers/post';
 const PostForm = () => {
 
     const { imagePaths } = useSelector((state) => state.post);
+
+    const imageInput = useRef();
 
     const dispatch = useDispatch();
 
@@ -17,7 +19,12 @@ const PostForm = () => {
 
     const onSubmit = useCallback(() => {
         dispatch(addPost);
+        setText('');
     }, []);
+
+    const onClickImageUpload = useCallback(() => {
+        imageInput.current.click();
+    }, [imageInput.current]);
 
     return (
         <Form style={{ margin: '10px 0 2px' }} encType='multipart/form-data' onFinish={onSubmit}>
@@ -28,8 +35,8 @@ const PostForm = () => {
                 placeholder="어떤 신기한"
             />
             <div>
-                <input type="file" multiple hidden />
-                <Button>이미지 업로드</Button>
+                <input type="file" multiple hidden ref={imageInput} />
+                <Button onClick={onClickImageUpload}>이미지 업로드</Button>
                 <Button type="primary" style={{ float: 'right' }} htmlType="submit">짹짹</Button>
 
             </div>
